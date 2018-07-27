@@ -56,7 +56,7 @@ class UserController extends Controller
         $success['email'] =  $user->email;
         $success['user_type_id'] =  $user->user_type_id;
         $success['picture_profil'] =  $user->picture_profil;
-        $success['token'] =  $user->createToken('Laravel')->accessToken;
+        $success['token'] =  ('Bearer ').$user->createToken('Laravel')->accessToken;
 
         return Response::json($success);
     }
@@ -65,15 +65,13 @@ class UserController extends Controller
     {
         if(Auth::attempt(['email' => request('email'), 'password' => request('password')])){
             $user = Auth::user();
-            $student = ($user->user_type_id == 3)?Student::select('*')->where('user_id', $user->id)->where('active', 1)->get()->first():null;
-
 
             $success['lastname'] =  $user->lastname;
             $success['firstname'] =  $user->firstname;
             $success['email'] =  $user->email;
             $success['user_type_id'] =  $user->user_type_id;
             $success['picture_profil'] =  $user->picture_profil;
-            $success['token'] =  $user->createToken('Laravel')->accessToken;
+            $success['token'] =  ('Bearer ').$user->createToken('Laravel')->accessToken;
             return Response::json($success);
         }
         else{

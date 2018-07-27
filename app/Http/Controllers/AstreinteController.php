@@ -5,8 +5,9 @@ namespace App\Http\Controllers;
 /**
  * Import the models that we need in this controller
  */
-use App\Astreinte;
 use App\User;
+use App\Astreinte;
+use App\StatusAstreinte;
 
 use App\Http\Controllers\Controller;
 
@@ -26,7 +27,7 @@ class AstreinteController extends Controller
      */
     public function getAstreinteForManager()
     {
-        if(Auth::user()->user_type_id == 3):
+        if(Auth::user()->user_type_id == 2):
             $astreintes = Astreinte::getAstreintes()->toArray();
             foreach($astreintes as $key=>$astreinte):
                 $users = User::select('users.id', 'users.lastname', 'users.firstname', 'users.picture_profil')
@@ -34,6 +35,14 @@ class AstreinteController extends Controller
                     ->where('astreintes.user_id', $astreinte['astreinte_user_id'])
                     ->groupBy('users.id')
                     ->get();
+
+                $status = StatusAstreinte::select('status_astreintes.id','status_astreintes.name')
+                    ->join('astreintes', 'astreintes.status_astreinte_id', 'status_astreintes.id')
+                    ->where('astreintes.user_id', $astreinte['astreinte_user_id'])
+                    ->groupBy('status_astreintes.id')
+                    ->get();
+
+                $astreintes[$key]['status'] = $status;
                 $astreintes[$key]['user'] = $users;
             endforeach;
 
@@ -59,6 +68,14 @@ class AstreinteController extends Controller
                     ->where('astreintes.user_id', $astreinte['astreinte_user_id'])
                     ->groupBy('users.id')
                     ->get();
+
+                $status = StatusAstreinte::select('status_astreintes.id','status_astreintes.name')
+                    ->join('astreintes', 'astreintes.status_astreinte_id', 'status_astreintes.id')
+                    ->where('astreintes.user_id', $astreinte['astreinte_user_id'])
+                    ->groupBy('status_astreintes.id')
+                    ->get();
+
+                $astreintes[$key]['status'] = $status;
                 $astreintes[$key]['user'] = $users;
             endforeach;
 
@@ -84,6 +101,33 @@ class AstreinteController extends Controller
         else:
             return response::json(['Error'=>'You are not a manager']);
         endif;
+    }
+
+    /**
+     * Get connected user's Astreinte
+     */
+
+    public function getAuthUserAstreintes()
+    {
+        $astreintes = Astreinte::getAstreinteAuthUser()->toArray();
+        foreach($astreintes as $key=>$astreinte):
+            $users = User::select('users.id', 'users.lastname', 'users.firstname', 'users.picture_profil')
+                ->join('astreintes', 'astreintes.user_id', 'users.id')
+                ->where('astreintes.user_id', $astreinte['astreinte_user_id'])
+                ->groupBy('users.id')
+                ->get();
+
+            $status = StatusAstreinte::select('status_astreintes.id','status_astreintes.name')
+                ->join('astreintes', 'astreintes.status_astreinte_id', 'status_astreintes.id')
+                ->where('astreintes.user_id', $astreinte['astreinte_user_id'])
+                ->groupBy('status_astreintes.id')
+                ->get();
+                
+            $astreintes[$key]['user'] = $users;
+            $astreintes[$key]['status'] = $status;
+        endforeach;
+
+        return response::json($astreintes);
     }
 
 }

@@ -32,4 +32,8 @@ Route::group(['middleware' => 'auth:api'], function(){
     // Validation ou refus d'une astreinte
     Route::post('validateAstreinte/{astreinteId}/ofAgent/{agentId}', 'AstreinteController@validateAstreinte');
     
+    /**
+     * Route pour les agents
+     */
+    Route::get('myAstreintes', 'AstreinteController@getAuthUserAstreintes');
 });
