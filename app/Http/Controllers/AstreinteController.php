@@ -67,4 +67,23 @@ class AstreinteController extends Controller
             return response::json(['Error'=>'You are not a manager']);
         endif;
     }
+
+    /**
+     * Validate or refuse astreinte of an agent by his id
+     * @param astreinteId, agentId
+     * @return response json
+     * Only the manager access there 
+     */
+    public function validateAstreinte(Request $request, $astreinteId, $agentId)
+    {
+        if(Auth::user()->user_type_id == 2):
+            $statusAstreinteUpdate = Astreinte::where('id', $astreinteId)->update(['status_astreinte_id' => $request->input('status')]);
+            if($statusAstreinteUpdate): 
+                return response::json('Update success');
+            endif;
+        else:
+            return response::json(['Error'=>'You are not a manager']);
+        endif;
+    }
+
 }

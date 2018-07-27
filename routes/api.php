@@ -29,5 +29,7 @@ Route::group(['middleware' => 'auth:api'], function(){
     Route::get('agentsAstreintes', 'AstreinteController@getAstreinteForManager');
     // Récupération des astreintes d'un agent
     Route::get('astreintesOf/{agentId}', 'AstreinteController@getAstreinteByAgentId');
-
+    // Validation ou refus d'une astreinte
+    Route::post('validateAstreinte/{astreinteId}/ofAgent/{agentId}', 'AstreinteController@validateAstreinte');
+    
 });
