@@ -6,16 +6,10 @@ namespace App\Http\Controllers;
  */
 use App\User;
 
-/**
- * Import App\Http
- */
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\User as UserResource;
 
-/**
- * Import illuminate
- */
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Response;

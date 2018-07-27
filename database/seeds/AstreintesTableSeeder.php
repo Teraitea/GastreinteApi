@@ -11,6 +11,6 @@ class AstreintesTableSeeder extends Seeder
      */
     public function run()
     {
-        //
+        factory('App\Astreinte', 10)->create();
     }
 }
